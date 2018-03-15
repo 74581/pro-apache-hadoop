@@ -6,3 +6,30 @@
         面对大数据量的处理需求，常用方法是把它们分割成互不依赖的小份数据分布处理
         即单指令多数据流（single-instruation, multiple-data, SIMD）的数据计算模式
         Hadoop为这样的云计算需求提供了一套开源的计算框架和一套分布式文件系统
+2.1Hadoop简介
+    以谷歌2004年发表的关于MapReduce的论文为基础开发，始于2005年，是开源网页搜索引擎Nutch项目下的一个子项目
+    后从Nutch项目分离出来，成为了Apache基金会的顶级项目
+    Hadoop是一个基于Java的MapReduce框架，也加入了对非Java的支持，以下是Hadoop的改进及其子项目：
+        Hadoop Streaming：
+            任何命令行脚本都可通过Streaming调用MapReduce框架，UNIX、Python程序员可用来开发临时任务
+        Hadoop Hive：
+            开发一个MapReduce程序需要大量编码工作，易出错且难以测试
+            用户需要类似SQL的语言，可以关注于业务问题而不必关心类似SQL命令功能的底层实现
+            Apache Hive可以把海量数据集放入数据仓库，用户可以编写类似SQL语句的Hive查询语句来查找数据
+            Hive引擎把Hive查询语句透明地转换为底层MapReduce任务来执行
+            高级用户可以使用Java语言来编写用户自定义函数（UDF），Hive也支持标准地ODBC、JDBC数据库驱动
+            或开发商用智能（Business Intelligence，BI）分析程序处理分析存放在Hadoop中的数据
+        Hadoop Pig：
+            与使用Hive的目的一样，但Hive是类SQL语言，属于陈述性语言；Pig是一种过程性语言，适合数据管道应用场景
+            Pig适合开发抽取、加载和传输（ETL）类型的程序，对数据处理管道程序的程序员有用（如SAS程序员）
+        Hadoop HBase：
+            以上项目都是批处理程序，现在有需求是在Hadoop中实时查询数据，这样的场景用例就是开发HBase平台的目的
+            如想查看Facebook一个朋友的用户资料，需要立即得到结果，而不是进经过长时间的批处理任务执行
+    Hadoop系统最早是作为用于海量文本数据的MapReduce引擎而启动的项目，后发展成通用的大数据处理模型，支持标准的企业级应用
+    
+    以前Hadoop系统只能在用户提交任务后以先进先出（FIFO）的模式在集群上执行任务
+    运行耗时、重要性低的任务占用大量的集群资源，而运行时间短、重要性高的任务无法运行
+    因此Hadoop中出现了更复杂的任务调度器，如公平调度器（Fair Scheduler）和计算能力调度器（Capacity Scheduler）
+    Hadoop 1.x系列（版本号小于0.23）中，系统本身设计的决策导致了集群在可扩展性方面的限制
+    如Yahoo发现当Hadoop系统集群的计算节点数量叨叨数千台量级的时候，集群会存在可扩展性问题
+    Hadoop的工程师们重新评估了Hadoop系统原型设计中的一些基础假设，核心架构被重新设计，Hadoop 2.x（版本号大于0.23）诞生
