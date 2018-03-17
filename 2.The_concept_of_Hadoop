@@ -264,3 +264,42 @@
             6.客户端会轮询作业跟踪器及时地获得作业运行状态
         作业跟踪器故障会导致Hadoop系统单点故障，若其挂掉，集群所有任务都无法正确运行
         同样由于仅有一个作业跟踪器节点运行，多任务同时运行的系统环境中，会增加该作业跟踪器节点的负载
+
+2.4Hadoop 2.0
+    MapReduce进行升级，即Hadoop 2.0，又被称为MapReduce 2.0（MR v2）或YARN
+    MR v2是一套应用编程接口（API），兼容MR v1，根据MR v1接口编写的程序仅需重新编译即可
+    其底层架构完全改变，Hadoop 1.x的作业调度器承担两个主要功能：
+        资源管理（Resource management）
+        作业调度/作业监控（Job scheduling/Job monitoring）
+    YARN把这两个功能分为两个守护进程来分别承担，使得系统有一个全局的资源管理器以及每个程序有一个应用程序管理器（Application Master）
+    注意，这里是程序（Application），而不是作业（Job）
+    在Hadoop 2.x系统中，一个程序（application）可指传统概念上的单独的MapReduce作业
+    也可指一些列作业组成的有向无环图（Directed Acyclic Graph，DAG），DAG是一个由许多节点相连构成的图，图中没有循环
+    多个作业组成了有向无环图就意味着这些作业之间存在着层属关系（hierarchical relationship）
+    YARN还使得Hadoop不仅仅局限于MapReduce
+        如Apache Hive给Hadoop系统带来了SQL特性
+        Apache PIG可让用户使用基于脚本的数据流方式处理数据
+        HAMA这样的新框架使得Hadoop系统更适合迭代计算，在机器学习的应用场景中很有用
+        来自Berkley的Spark/Shark框架是Hive和HAMA的结合，提供了低延时的SQL访问和一些内存计算能力
+
+    对框架重新设计，使得基于海量数据批处理计算框架（不仅是MapReduce模型），基于HAMA的数据整体同步并行计算（BSP）框架
+    基于Shark／Spark的内存缓存和计算框架都能运行在统一的Hadoop系统上，整个Hadoop系统对其提供一致的原生支持
+    使得关于安全和资源管理的系统级策略能以一致的方式应用，所有系统都共享相同的底层HDFS
+    YARN系统由以下几个部分组成：
+        全局资源管理系统（Global Resource Manager）
+        节点管理器（Node Manager）
+        针对每种应用程序的应用程序管理器（Application-specific Application Master）
+        调度器（Scheduler）
+        容器（Container）
+
+    一部分CPU内核和一部分内存构成了一个容器
+    一个应用程序（application）运行在一组容器中
+    应用程序管理器的一个实例会向全局资源管理器请求获取资源
+    调度器会通过每个节点的节点管理器（Node Manager）来分配资源（容器）
+    节点管理器会向全局资源管理器汇报每个容器的使用情况
+
+    全局资源管理器和每个节点的节点管理器构成了新的MapReduce框架的管理系统，全局资源管理器全权负责系统资源的分配
+    每种应用程序都有一个应用程序管理器（比如MapReduce是一种应用程序，每个MapReduce作业是MapReduce类型程序的一个实例）
+    针对同一应用程序类型的所有应用程序，一个应用程序管理器实例被初始化，应用程序管理器实例（instance）向全局资源管理器协商获得容器运行作业
+    全局资源管理器利用调度器（全局组件）与每个节点的节点管理器的沟通结果来分配资源，从系统角度看，应用程序管理器也运行在一个容器中
+    整体上，我们在一群商用服务器上搭建了Hadoop集群，每台服务器称为一个节点
