@@ -1,1 +1,30 @@
+3.初识Hadoop框架
+3.1安装类型
+    对多种平台上安装Hadoop系统有个几把了解是重要的，原因如下：
+        1.要想对Hadoop程序进行单元测试，Hadoop系统需要安装在单机模式下，在Linux中相对简单，Windows中非常繁琐
+        2.为了能模拟Hadoop程序在集群中的运行情况，Hadoop系统提供了伪分布式集群模式下的操作
+    安装详见https://github.com/74581/hello-world/blob/master/hadoop/hadoop_install
 
+    3.1.1单机模式
+        单机模式（Stand-Alone Mode），最简单的安装类型模式，最适合调试
+        该模式中，Hadoop系统所有程序运行在一个单独的JVM中，性能最差，在开发过程中最高效
+    
+    3.1.2伪分布式集群模式
+        伪分布式集群模式（Pseudo-Distributed Cluster），Hadoop系统以伪分布式的方式运行在一个服务器节点中
+        所有守护进程分别运行在不同的Java进程中，经常用来模拟一个集群环境
+    
+    3.1.3多节点集群安装模式
+        多节点集群安装模式（Multinode Node Cluster Installation），Hadoop系统安装在若干机器组成的集群中
+        从系统逻辑上看，其运行情况与伪分布式模式是一致的
+    
+    3.1.4基于Amazon EMR预安装模式
+        使用亚马逊公司的EMR（Elastic MapReduce）服务，背后主要思想如下：
+            1.用户使用公司S3服务加载数据，S3是一项简单的存储服务
+                由AWS（Amazon Web Service）提供的一个分布式文件存储系统
+                它通过Web Services接口提供存储服务，扮演了HDFS的角色
+                通过配置，Hadoop系统可以把其当作分布式文件系统使用
+            2.用户也可使用其S3服务加载应用程序函数库
+            3.用户通过指定函数库和输入文件在S3上的位置就可启动一个EMR作业，还要指定在S3上的输出目录供作业执行完毕写入输出结果
+            4.在亚马逊云上启动一个Hadoop集群，执行作业，结果输出到上步指定目录中
+        默认操作中，集群会被自动关闭，不必继续支付费用，用户可自己设定自动终止选项
+        可使用SSH（Secure Shell）客户端登陆集群任何一个计算节点，就能继续使用Hadoop系统集群的全部功能
