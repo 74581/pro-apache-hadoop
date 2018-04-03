@@ -28,3 +28,33 @@
             4.在亚马逊云上启动一个Hadoop集群，执行作业，结果输出到上步指定目录中
         默认操作中，集群会被自动关闭，不必继续支付费用，用户可自己设定自动终止选项
         可使用SSH（Secure Shell）客户端登陆集群任何一个计算节点，就能继续使用Hadoop系统集群的全部功能
+
+3.2使用Cloudera虚拟机搭建开发环境
+    略
+
+3.3一个MapReduce程序的组成
+    各组成部分：
+        Java程序客户机（Client Java program）：
+            一个Java程序，由集群的一个客户端节点（边缘节点）提交运行
+            该客户端节点可访问Hadoop集群，经常（并不总是）由集群的一个数据节点充当
+            该节点仅是集群的一台机器，并有权访问Hadoop
+        自定义Mapper类（Custom Mapper class）：
+            MapReduce程序中的这个Mapper类通常是一个用户自定义类
+            若不是在伪集群模式下运行，这个类的实例会在远程任务节点上执行
+            这些任务节点往往与用来提交作业程序的客户端节点不同
+        自定义Reducer类（Custom Reducer class）：
+            MapReduce程序中的这个Reducer类通常是一个用户自定义类
+            若不是在伪集群模式下运行，这个类的实例会在远程任务节点上执行
+            这些任务节点往往与用来提交作业程序的客户端节点不同
+        客户端函数库（Client-side libraries）：
+            不同于Hadoop系统的标准函数库，是在客户端运行期间使用的
+            客户端需要使用的Hadoop系统的标准函数库已安装，使用通过Hadoop的Client命令（不同于客户端程序）配置到CLASSPATH中
+            可在文件夹$HADOOP_HOME/bin/中找到，名为hadoop
+            Hadoop命令用来执行客户端程序，会启动一个Hadoop作业
+            这些函数库都被配置到了环境变量HADOOP_CLASSPATH中
+        远程函数库（Remote libraries）：
+            是用户自定义Mapper类和Reducer类所需要的，不包括Hadoop系统自带的函数库，自带函数库已经在每个数据节点配置好了
+            如果Mapper类用到一个特殊的XML解析器，包含这个解析器的函数库就必须被传输到执行这个Mapper类实例的远程数据节点
+        Java程序档案文件（Java Application Archive（JAR）files）：
+            Java程序以JAR文件的形式打包，包括了客户端Java类，以及用户自定义Mapper类和Reducer类
+            还包括了客户端Java类、Mapper类和Reducer类用到的其他自定义依赖类
