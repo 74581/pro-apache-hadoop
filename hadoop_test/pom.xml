@@ -8,5 +8,13 @@
     <artifactId>hadoop_test</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    
+    <name>Hadoop_test</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+    </dependencies>
+
 </project>
