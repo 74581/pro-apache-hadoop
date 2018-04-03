@@ -68,3 +68,24 @@
         以本地模式运行Hadoop程序是非常重要的，可以对程序做单元测试以便快速进行开发工作
         要做的唯一工作是正确配置HADOOP_HOME环境变量，而且{HADOOP_HOME}/bin要包含在PATH变量中
         但是，在Windows环境中，Hadoop程序所需要应用的动态链接库（DLL）都要在本机配置好
+    
+    3.4.2使用旧API编写的单词计数程序
+        hadoop_text: WordCountOldAPI.java
+        展示的是使用已经被废弃的旧API编写的单词计数WordCount程序，维护老代码时会碰到
+        
+        程序开始，Mapper函数从输入文件夹中读取数据块，一个文件的字节流会被转换成一个记录（键/值对格式）作为Mapper的输入
+        键是当前行字节偏移量（LongWritable.class实例），值（Text.class实例）是从文件中读取的一行文本数据
+        Mapper发送每行的单词和整数1；注意：Hadoop作业程序需要使用与Integer.class对应的系统自带的IntWritable.class类
+        因为Hadoop系统底层I/O传输设计，Hadoop作业程序的Mappers和Reducers的输入和输出必须是Writable.class类型的实例
+        
+        紧接着是Hadoop系统的Shuffle阶段，所有键在Shuffle/Sort阶段被排序，然后发送给Reducer
+        Reducer接受到是一个IntWritable.class类实例的迭代器，在Reducer中使用的是相同的IntWritable.class类实例
+        当Reducer迭代地取出键对应地一系列值，相同的IntWritable.class类实例被复用
+        内部运行中，Hadoop系统框架在其迭代器中使用values.next()之后，调用IntWritable.get方法
+
+        最后结果被写入由FileOutputFormat.setOutputPath(conf, new Path(args[1]))指定的输出文件目录中
+        Reducer会向输出文件中写入结果键和值的实例，输出文件中的键和值实例的默认分隔符是TAB
+        可通过配置参数：mapreduce.textoutputformat.separator修改
+        如：conf.set("mapreduce.textoutputformat.separator", ",")会把键/值间的分隔符变为“，”
+
+        真实集群运行作业，配置多少Reducers实例运行，就会生成多少个结果文件
