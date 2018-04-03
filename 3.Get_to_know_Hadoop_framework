@@ -58,3 +58,6 @@
         Java程序档案文件（Java Application Archive（JAR）files）：
             Java程序以JAR文件的形式打包，包括了客户端Java类，以及用户自定义Mapper类和Reducer类
             还包括了客户端Java类、Mapper类和Reducer类用到的其他自定义依赖类
+
+3.4第一个Hadoop程序
+    书中原开发环境：带有Maven插件的Eclipse
