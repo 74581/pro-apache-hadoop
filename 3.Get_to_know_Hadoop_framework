@@ -61,3 +61,10 @@
 
 3.4第一个Hadoop程序
     书中原开发环境：带有Maven插件的Eclipse
+    首先创建一个空的Maven工程，添加所需依赖库，创建项目对象模型（Project Object Model，POM）
+    现在由两套MapReduce API，旧API已经被废弃，但之前广泛使用
+    
+    3.4.1以本地模式运行程序的必要条件
+        以本地模式运行Hadoop程序是非常重要的，可以对程序做单元测试以便快速进行开发工作
+        要做的唯一工作是正确配置HADOOP_HOME环境变量，而且{HADOOP_HOME}/bin要包含在PATH变量中
+        但是，在Windows环境中，Hadoop程序所需要应用的动态链接库（DLL）都要在本机配置好
