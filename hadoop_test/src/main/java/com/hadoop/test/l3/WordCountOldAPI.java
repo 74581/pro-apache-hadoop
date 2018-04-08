@@ -11,20 +11,22 @@ import java.util.Iterator;
 
 public class WordCountOldAPI {
 
-    public static class MyMapper extends MapReduceBase implements
-            Mapper<LongWritable, Text, Text, IntWritable> {
-        public void map(LongWritable key, Text value,
-                        OutputCollector<Text, IntWritable> output, Reporter reporter)
-                throws IOException {
+    public static class MyMapper extends MapReduceBase
+            implements Mapper<LongWritable, Text, Text, IntWritable> {
+        public void map(LongWritable key,
+                        Text value,
+                        OutputCollector<Text, IntWritable> output,
+                        Reporter reporter) throws IOException {
             output.collect(new Text(value.toString()), new IntWritable(1));
         }
     }
 
-    public static class MyReducer extends MapReduceBase implements
-            Reducer<Text, IntWritable, Text, IntWritable> {
-        public void reduce(Text key, Iterator<IntWritable> values,
-                           OutputCollector<Text, IntWritable> output, Reporter reporter)
-                throws IOException {
+    public static class MyReducer extends MapReduceBase
+            implements Reducer<Text, IntWritable, Text, IntWritable> {
+        public void reduce(Text key,
+                           Iterator<IntWritable> values,
+                           OutputCollector<Text, IntWritable> output,
+                           Reporter reporter) throws IOException {
             int sum = 0;
             while (values.hasNext()) {
                 sum += values.next().get();
@@ -53,6 +55,7 @@ public class WordCountOldAPI {
         conf.setMapperClass(MyMapper.class);
         conf.setCombinerClass(MyReducer.class);
         conf.setReducerClass(MyReducer.class);
+        conf.setNumReduceTasks(1);
 
         conf.setInputFormat(TextInputFormat.class);
         /*
