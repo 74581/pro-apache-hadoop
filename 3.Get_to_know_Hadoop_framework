@@ -89,3 +89,24 @@
         如：conf.set("mapreduce.textoutputformat.separator", ",")会把键/值间的分隔符变为“，”
 
         真实集群运行作业，配置多少Reducers实例运行，就会生成多少个结果文件
+    
+    3.4.3构建程序
+        构建过程生成文件hadoop_test-1.0-SNAPSHOT.jar，该应用程序中使用的各个组件
+        组件                      名称
+        Client类                  WordCountOldAPI.java
+        Mapper类                  WordCountOldAPI.MyMapper.java
+        Reducer类                 WordCountOldAPI.MyReducer.java
+        Application JAR文件       hadoop_test-1.0-SNAPSHOT.jar
+        客户端函数库               没有使用
+        远程函数库                 没有使用
+    
+    3.4.4在集群模式下运行单词计数程序
+        集群模式运行作业和本地模式运行不同点：
+            1.运行Map和Reduce任务的节点与提交作业的客户端节点不是同一个节点
+            2.Map和Reduce任务都在各自的JVM中运行
+        用以下方法提交到集群执行：
+            $ hdfs dfs -mkdir -p input  # 在dfs用户目录下创建一个输入文件夹
+            $ hdfs dfs -ls  # 检验
+            $ hdfs dfs -put /home/用户名/hadoop-3.0.0/io/input/l3/test.txt input  # 上传文件，可改用网页操作
+            $ hadoop jar /home/用户名/hadoop-3.0.0/application_jar/l3/ahadoop_test-1.0-SNAPSHOT.jar com.hadoop.text.c3.WordCountOldAPI input/test.txt output/任务名  # 注意：输出目录不能已存在
+            Hadoop命令负责把jar文件发送到远程节点，即把程序移动到数据附近
